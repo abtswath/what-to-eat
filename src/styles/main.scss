@@ -1,50 +1,32 @@
 * {
-  -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent;
 }
 
 ul, li {
-  list-style: none;
+    list-style: none;
 }
 
 .food {
-  color: #000000;
-  position: absolute;
-  font-size: 1em;
-  transform: scale(1.4);
+    color: #000000;
+    position: absolute;
+    font-size: 1em;
+    transform: scale(1.4);
 }
 
 .food-enter-active {
-  transition: all 300ms ease-out;
+    transition: all 300ms ease-out;
 }
 
 .food-leave-active {
-  transition: all 1000ms ease-out;
+    transition: all 1000ms ease-out;
 }
 
 .food-enter-from {
-  opacity: .8;
-  transform: scale(1.5);
+    opacity: .8;
+    transform: scale(1.5);
 }
 
 .food-leave-to {
-  opacity: 0;
-  transform: scale(.5);
-}
-
-@-webkit-keyframes flash {
-  0% {
     opacity: 0;
-    -webkit-transform: scale(1.5);
-    transform: scale(1.5);
-    color: transparent;
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5)
-  }
-  50% {
-    opacity: 1
-  }
-  100% {
-    opacity: 0;
-    -webkit-transform: scale(0.5);
-    transform: scale(0.5)
-  }
+    transform: scale(.5);
 }

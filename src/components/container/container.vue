@@ -7,10 +7,9 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, watch, ref, watchEffect} from 'vue';
+import {defineComponent, watch, ref, computed, PropType} from 'vue';
 import FoodItem from '@/components/container/food-item.vue';
 import {Food} from '@/types/food';
-import foods from './foods.json';
 
 export default defineComponent({
     components: {
@@ -24,13 +23,17 @@ export default defineComponent({
         speed: {
             type: Number,
             default: 1000 / 15
+        },
+        menu: {
+            type: Array as PropType<string[]>,
+            required: true
         }
     },
-    setup(props, context) {
+    setup(props: { running: boolean, speed: number, menu: string[] }, context) {
         const randomFood = (): Food => {
-            const food = foods[Math.floor(Math.random() * foods.length)];
+            console.log(props.menu)
             return {
-                name: food?.name || '螺蛳粉',
+                name: props.menu[Math.floor(Math.random() * props.menu.length)],
                 x: Math.random() * 70 + 5,
                 y: Math.random() * 80 + 10,
             };

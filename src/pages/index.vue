@@ -1,23 +1,56 @@
 <template>
-    <Container v-model:running="running" ref="containerRef" @on-change="handleChange"/>
+    <Container v-model:running="running" :menu="menu" ref="containerRef" @on-change="handleChange"/>
     <div class="control">
         <p>{{ selection === undefined ? '吃神马。。、？' : selection.name }}</p>
-        <button @click="toggleRunning">
-            {{ running ? '停' : '开始' }}
-        </button>
+        <div class="btn-group">
+            <NButton :style="{width: '120px'}" type="primary" @click="toggleRunning">
+                {{ running ? '停' : '开始' }}
+            </NButton>
+        </div>
     </div>
+    <Menu v-model:menu="menu"/>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue';
+import {computed, defineComponent, ref, watch} from 'vue';
 import Container from '@/components/container/container.vue';
 import {Food} from '@/types/food';
+import Menu from '@/components/menu/index.vue';
+import {NButton} from 'naive-ui';
+import defaultMenu from '@/config/menu';
 
 export default defineComponent({
     components: {
-        Container
+        Container,
+        Menu,
+        NButton,
     },
     setup() {
+
+        const computedMenu = computed({
+            get: () => {
+                try {
+                    let menu = localStorage.getItem('menu');
+                    if (menu == '' || menu == null) {
+                        menu = defaultMenu;
+                        localStorage.setItem('menu', menu);
+                    }
+                    return JSON.parse(menu);
+                } catch (e) {
+                    localStorage.setItem('menu', defaultMenu);
+                    return JSON.parse(defaultMenu);
+                }
+            },
+            set: (value) => {
+                localStorage.setItem('menu', JSON.stringify(value));
+            }
+        });
+
+        const menu = ref(computedMenu.value);
+
+        watch(() => menu.value, value => {
+            computedMenu.value = value;
+        });
 
         const selection = ref<Food>();
 
@@ -35,7 +68,8 @@ export default defineComponent({
             running,
             toggleRunning,
             handleChange,
-            selection
+            selection,
+            menu
         }
     }
 })
@@ -55,48 +89,6 @@ export default defineComponent({
     p {
         font-weight: bold;
         font-size: 1.4em;
-    }
-
-    button {
-        -webkit-tap-highlight-color: transparent;
-        width: 120px;
-        background: #18a058;
-        color: #fff;
-        font-size: 1em;
-        outline: none;
-        border: none;
-        padding: 12px 0;
-        line-height: 1;
-        font-family: inherit;
-        border-radius: .2em;
-        white-space: nowrap;
-        position: relative;
-        z-index: auto;
-        display: inline-flex;
-        flex-wrap: nowrap;
-        flex-shrink: 0;
-        align-items: center;
-        justify-content: center;
-        user-select: none;
-        text-align: center;
-        cursor: pointer;
-        text-decoration: none;
-        transition: color .3s cubic-bezier(0.4, 0, 0.2, 1), background-color .3s cubic-bezier(0.4, 0, 0.2, 1), opacity .3s cubic-bezier(0.4, 0, 0.2, 1), border-color .3s cubic-bezier(0.4, 0, 0.2, 1);
-
-        &:hover {
-            background-color: #18a058;
-            color: #ffffff;
-        }
-
-        &:focus {
-            background-color: #36ad6a;
-            color: #ffffff;
-        }
-
-        &:active {
-            background-color: #0c7a43;
-            color: #ffffff;
-        }
     }
 }
 </style>
